@@ -33,7 +33,10 @@ La commande devrait se terminer sans erreurs.
 ### quelques bonnes lectures
 Toujours bien d'apprendre :)
 
-- ArrayAccess
-- Iterator
-- SplFixedArray
--
+- [ArrayAccess](https://www.php.net/manual/fr/class.arrayaccess.php)
+- [Iterator](https://www.php.net/manual/fr/class.iterator.php) / [IteratorAggregate](https://www.php.net/manual/fr/class.iteratoraggregate.php)
+- [SplFixedArray](https://www.php.net/manual/fr/class.splfixedarray.php)
+- [Countable](https://www.php.net/manual/fr/class.countable.php)
+- [Stringable](https://www.php.net/manual/fr/class.stringable.php)
+- [__construct](https://www.php.net/manual/en/language.oop5.decon.php#language.oop5.decon.constructor) / [__destruct](https://www.php.net/manual/en/language.oop5.decon.php#language.oop5.decon.destructor)
+- [call_user_func](https://www.php.net/manual/fr/function.call-user-func.php) / [call_user_func_array](https://www.php.net/manual/fr/function.call-user-func-array.php)
