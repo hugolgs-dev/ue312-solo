@@ -2,7 +2,7 @@
 
 class BitArrayIterator implements Iterator {
     public function __construct() {}
-    public function current(): int {}
+    public function current(): int|BitArray {}
     public function key(): int {}
     public function next(): void {}
     public function rewind(): void {}
