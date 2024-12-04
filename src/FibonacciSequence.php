@@ -3,7 +3,10 @@
 class FibonacciSequence implements Iterator {
     //private array $sequence; /!\ Plus besoin car on est en lazy evaluation
     private int $position = 0;
-    private int $max;
+    private int $max; // Pour la limite
+
+    // Pour le bonus (je crois) : utiliser et partager un seul et même cache entre toutes les instances de la classe
+    private static array $cache = [];
 
     // Constructeur pour générer & sauvegarder les premiers nombres de la séquence
     public function __construct(int $n) {
@@ -49,6 +52,7 @@ class FibonacciSequence implements Iterator {
         $this->position = 0;
     }
 
+    // C'est dans cette méthode que l'on met en place les 2 modes : infini ou limite/borne finie
     public function valid(): bool {
         // On indique ici que la limite de la séquence est égale au nombre de F voulu, pour éviter tout problème.
         return $this->position <= $this->max;
@@ -57,25 +61,53 @@ class FibonacciSequence implements Iterator {
     // On calcula la séquence, en prenant en compte les cas particuliers F_0, F_1 et F_2
     // qui valent respectivement 0, 1 et 1
     private function fibonacci(int $n): int {
-        if($n == 0){
-            return 0;
-        } elseif ($n == 1 || $n ==2){
-            return 1;
-        } else{
-            return ($this->fibonacci($n - 1) + $this->fibonacci($n - 2));
+
+        echo "Mémoire AVANT calcul pour F_$n: " . implode(', ', self::$cache) . "\n";
+        // On regarde si des nombres calculés sont déjà dans le cache.
+        // Si c'est le cas,
+        if (isset(self::$cache[$n] )) {
+            echo "F_$n est déjà calculée! \n";
+            return self::$cache[$n];
         }
+
+        if($n === 0){
+            self::$cache[$n] = 0;
+        } elseif ($n === 1 || $n === 2){
+            self::$cache[$n] = 1;
+        } else{
+
+            // On regarde si n-1 a déjà été calcul
+            if(!isset(self::$cache[$n-1])){
+                echo "$n - 1 déjà en mémoire \n";
+                self::$cache[$n - 1] = $this->fibonacci($n - 1);
+            }
+
+            // De la même manière, on regarde si n-2 a déjà été calculé
+            if (!isset(self::$cache[$n - 2])) {
+                echo "$n - 2 déjà en mémoire \n";
+                self::$cache[$n - 2] = $this->fibonacci($n - 2);
+            }
+
+            echo "on calcule pour n = $n \n";
+            self::$cache[$n] = self::$cache[$n - 1] + self::$cache[$n - 2];
+        }
+
+
+        echo "Mémoire APRÈS calcul pour F_$n: " . implode(', ', self::$cache) . "\n";
+
+
+        return self::$cache[$n];
     }
 }
-
-// Pour la mémorisation (point 5. de l'exo)
 
 // Valeur de test
 $n = 10;
 
-$seq = new FibonacciSequence($n);
-foreach($seq as $key => $value){
-    echo "F_[$key] = $value\n";
+// On crée une nouvelle séquence
+$sequence = new FibonacciSequence($n);
+foreach($sequence as $key => $value){
+    if ($key > 15) break;
+    echo "Pour n = $key => F_$key = $value\n";
 }
-
 
 
