@@ -25,11 +25,12 @@ class FibonacciSequence implements Iterator {
             $this->sequence[] = $this->fibonacci($i);
             $this->position++;
         }
+        (je le garde car j'aime bien faire des maths, donc c'est pour en avoir un sous le coude :)
         */
 
     }
     public static function first(int $n): self {
-
+        $first = new self($n);
     }
 
     public static function range(int $start, int $length = -1): self {
@@ -55,10 +56,18 @@ class FibonacciSequence implements Iterator {
     // C'est dans cette méthode que l'on met en place les 2 modes : infini ou limite/borne finie
     public function valid(): bool {
         // On indique ici que la limite de la séquence est égale au nombre de F voulu, pour éviter tout problème.
-        return $this->position <= $this->max;
+        //return $this->position <= $this->max;
+
+        // Pour pouvoir calculer soit à l'infini soit à une borne définie (6.)
+        // -1 pour l'infini, $max pour la borne
+        if($this->max !== -1 && $this->position >= $this->max) {
+            return false;
+        }
+
+        return true;
     }
 
-    // On calcula la séquence, en prenant en compte les cas particuliers F_0, F_1 et F_2
+    // On calcul la la séquence, en prenant en compte les cas particuliers F_0, F_1 et F_2
     // qui valent respectivement 0, 1 et 1
     private function fibonacci(int $n): int {
 
