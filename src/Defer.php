@@ -42,21 +42,22 @@ class Defer {
     }
 }
 
-// Example
+// Examples
 
+// Exemple simple
+echo "\033[1;97mExemple simple\033[0m" . PHP_EOL;
 $defer = new Defer();
 
-echo "Pile d'exemple : " . PHP_EOL;
-
 $defer(function (int $chiffre = 1) {
-    echo $chiffre . PHP_EOL;
+    echo "Premier entrée : " . $chiffre . PHP_EOL;
 });
 
 $defer(function (int $chiffre = 2) {
-    echo $chiffre . PHP_EOL;
+    echo "Deuxième entrée : " . $chiffre . PHP_EOL;
 });
 
 $defer(function (int $chiffre = 3) {
-    echo $chiffre . PHP_EOL;
+    echo "Troisième entrée : " . $chiffre . PHP_EOL;
 });
+
 
