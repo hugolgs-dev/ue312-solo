@@ -1,20 +1,27 @@
 <?php declare(strict_types=1);
 
-class BitArrayIterator implements Iterator {
-    public function __construct() {
 
+class BitArrayIterator implements Iterator {
+    private int $position = 0;
+    private array $array;
+    public function __construct() {
+        $this->array = [];
+        $this->position = 0;
     }
     public function current(): int {
+        return $this->array[$this->position];
     }
     public function key(): int {
+        return $this->position;
     }
     public function next(): void {
+        $this->position++;
     }
     public function rewind(): void {
-
+        $this->position = 0;
     }
     public function valid(): bool {
-
+        return isset($this->array[$this->position]);
     }
 }
 
@@ -120,14 +127,19 @@ class BitArray implements ArrayAccess, Countable, IteratorAggregate, Stringable 
     }
 }
 
+// Série de tests pour les différentes méthodes de BitArray()
 
-/*
+// Pour compter le nombre de bits
+echo "\033[1;97m Pour compter le nombre de bits dans un tableau\033[0m" . PHP_EOL;
 $bits = new BitArray();
 $bits->bits = [1, 0, 1, 0, 0, 0, 1];
 echo  'Il y a ' . $bits->count() . ' bits dans le tableau.' . PHP_EOL;
-*/
 
-/*
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+// Exemples de conversions
+echo "\033[1;97mExemples de conversions\033[0m" . PHP_EOL;
+
 $n = 9;
 $s_ob = '0b1000';
 $s = '1000';
@@ -139,41 +151,54 @@ echo "Conversion en bits de $n : " . $bitsFromInt . PHP_EOL; ;
 echo "Conversion en bits de $s : " . $bitsFromString . PHP_EOL;
 echo "Conversion en bits de $s_ob : " . $bitsFromString . PHP_EOL;
 
-*/
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
 
+echo "\033[1;97mExemple d'unset n°1'\033[0m" . PHP_EOL;
 $bitArray = new BitArray();
 $bitArray->bits = [1, 0, 1, 1, 0, 1, 1];
-echo "Avant unset: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Avant unset : " . implode('', $bitArray->bits) . PHP_EOL;
 
 $bitArray->unset(2, 3); // Met à zéro les bits aux indices 2, 3, 4
-echo "Après unset: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Après unset : " . implode('', $bitArray->bits) . PHP_EOL;
 
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+echo "\033[1;97mExemple d'unset n°2'\033[0m" . PHP_EOL;
 $bitArray = new BitArray();
 $bitArray->bits = [1, 0, 1, 1, 0, 1, 1];
-echo "Avant unset: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Avant unset : " . implode('', $bitArray->bits) . PHP_EOL;
 
 $bitArray->unset(4); // Met à zéro les bits à partir de l'indice 4
-echo "Après unset: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Après unset : " . implode('', $bitArray->bits) . PHP_EOL;
 
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+echo "\033[1;97mExemple de slice n°1'\033[0m" . PHP_EOL;
 
 $bitArray = new BitArray();
 $bitArray->bits = [1, 0, 1, 1, 0, 1, 1];
-echo "Bits originaux: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Bits originaux : " . implode('', $bitArray->bits) . PHP_EOL;
 
 $sliced = $bitArray->slice(2, 3); // Extraire les bits aux indices 2, 3, 4
-echo "Slice: " . implode('', $sliced->bits) . PHP_EOL;
+echo "Après le slice : " . implode('', $sliced->bits) . PHP_EOL;
 
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+echo "\033[1;97mExemple de slice n°2'\033[0m" . PHP_EOL;
 $bitArray = new BitArray();
 $bitArray->bits = [1, 0, 1, 1, 0, 1, 1];
-echo "Bits originaux: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Bits originaux : " . implode('', $bitArray->bits) . PHP_EOL;
 
 $sliced = $bitArray->slice(4); // Extraire les bits à partir de l'indice 4 jusqu'à la fin
-echo "Slice: " . implode('', $sliced->bits) . PHP_EOL;
+echo "Après le slice : " . implode('', $sliced->bits) . PHP_EOL;
 
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+echo "\033[1;97mExemple de slice n°3'\033[0m" . PHP_EOL;
 $bitArray = new BitArray();
 $bitArray->bits = [1, 0, 1, 1];
-echo "Bits originaux: " . implode('', $bitArray->bits) . PHP_EOL;
+echo "Bits originaux : " . implode('', $bitArray->bits) . PHP_EOL;
 
 $sliced = $bitArray->slice(2, 10); // Extraire à partir de l'indice 2, longueur 10
-echo "Slice: " . implode('', $sliced->bits) . PHP_EOL;
+echo "Après le slice : " . implode('', $sliced->bits) . PHP_EOL;
 
