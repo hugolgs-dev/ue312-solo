@@ -13,21 +13,11 @@ class FibonacciSequence implements Iterator {
         $this->position = 0;
 
         // On s'assure que la série ne soit pas négative
-        if($n < 0){
+        if($n < -1){
             throw new InvalidArgumentException("La séquence ne peut pas être négative!");
         }
 
         $this->max = $n; // Limite pour des soucis d'optimisation & pour utiliser la méthode valid()
-
-        /*
-        // On génère les premiers nombres de la séquence /!\ Plus besoin car on ne se base plus sur $sequence
-        for ($i = 0; $i < $n; $i++) {
-            $this->sequence[] = $this->fibonacci($i);
-            $this->position++;
-        }
-        (je le garde car j'aime bien faire des maths, donc c'est pour en avoir un sous le coude :)
-        */
-
     }
     public static function first(int $n): self {
         $first = new self($n);
@@ -55,9 +45,6 @@ class FibonacciSequence implements Iterator {
 
     // C'est dans cette méthode que l'on met en place les 2 modes : infini ou limite/borne finie
     public function valid(): bool {
-        // On indique ici que la limite de la séquence est égale au nombre de F voulu, pour éviter tout problème.
-        //return $this->position <= $this->max;
-
         // Pour pouvoir calculer soit à l'infini soit à une borne définie (6.)
         // -1 pour l'infini, $max pour la borne
         if($this->max !== -1 && $this->position >= $this->max) {
@@ -67,16 +54,13 @@ class FibonacciSequence implements Iterator {
         return true;
     }
 
-    // On calcul la la séquence, en prenant en compte les cas particuliers F_0, F_1 et F_2
+    // On calcule la la séquence, en prenant en compte les cas particuliers F_0, F_1 et F_2
     // qui valent respectivement 0, 1 et 1
     private function fibonacci(int $n): int {
-
-        echo "Mémoire AVANT calcul pour F_$n: " . implode(', ', self::$cache) . "\n";
-        // On regarde si des nombres calculés sont déjà dans le cache.
-        // Si c'est le cas,
-        if (isset(self::$cache[$n] )) {
-            echo "F_$n est déjà calculée! \n";
+        if (isset(self::$cache[$n])) {
+            echo "F_$n déjà en mémoire. ";
             return self::$cache[$n];
+
         }
 
         if($n === 0){
@@ -85,38 +69,84 @@ class FibonacciSequence implements Iterator {
             self::$cache[$n] = 1;
         } else{
 
-            // On regarde si n-1 a déjà été calcul
+            // On regarde si n-1 a déjà été calculé
             if(!isset(self::$cache[$n-1])){
-                echo "$n - 1 déjà en mémoire \n";
                 self::$cache[$n - 1] = $this->fibonacci($n - 1);
             }
 
             // De la même manière, on regarde si n-2 a déjà été calculé
             if (!isset(self::$cache[$n - 2])) {
-                echo "$n - 2 déjà en mémoire \n";
                 self::$cache[$n - 2] = $this->fibonacci($n - 2);
             }
 
-            echo "on calcule pour n = $n \n";
+            echo "on calcule pour n = $n : ";
             self::$cache[$n] = self::$cache[$n - 1] + self::$cache[$n - 2];
         }
 
-
-        echo "Mémoire APRÈS calcul pour F_$n: " . implode(', ', self::$cache) . "\n";
-
-
         return self::$cache[$n];
+    }
+
+    // Méthode pour vider le cache, uniquement pour les exemples ci-dessous
+    public static function resetCache(): void {
+        self::$cache = [];
     }
 }
 
-// Valeur de test
-$n = 10;
+// Exemples de séquences
 
-// On crée une nouvelle séquence
-$sequence = new FibonacciSequence($n);
-foreach($sequence as $key => $value){
-    if ($key > 15) break;
-    echo "Pour n = $key => F_$key = $value\n";
+// Avec une limite finie
+echo "\033[1;97mExemple d'une séquence avec limite finie\033[0m" . PHP_EOL;
+$sequence_finie = new FibonacciSequence(6);
+foreach($sequence_finie as $key => $value){
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
+}
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+FibonacciSequence::resetCache();
+
+// Avec une limite limite infinie
+echo "\033[1;97mExemple d'une séquence avec limite infinie\033[0m" . PHP_EOL;
+$count = 0;
+$sequence_inf = new FibonacciSequence(-1);
+foreach($sequence_inf as $key => $value) {
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
+    $count++;
+    if ($count >= 12) break;
+}
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+
+FibonacciSequence::resetCache();
+
+// Séquence de taille 0
+echo "\033[1;97mExemple d'une séquence de taille 0\033[0m" . PHP_EOL;
+$sequence_zero = new FibonacciSequence(0);
+foreach($sequence_zero as $key => $value) {
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
+    $count++;
+    if ($count >= 20) break;
+}
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
+FibonacciSequence::resetCache();
+
+// En utilisant le cache
+echo "\033[1;97mExemple d'utilisation du cache\033[0m" . PHP_EOL;
+echo "\033[1;97mSéquence n°1 :\033[0m" . PHP_EOL;
+$sequence_cache_1 = new FibonacciSequence(5);
+foreach($sequence_cache_1 as $key => $value) {
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
 }
 
+echo "\033[1;97mSéquence n°2 :\033[0m" . PHP_EOL;
+$sequence_cache_2 = new FibonacciSequence(8);
+foreach($sequence_cache_2 as $key => $value) {
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
+}
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
 
+FibonacciSequence::resetCache();
+
+// Séquence de taille négative => on vérifie qu'une erreur se produit
+echo "\033[1;97mExemple d'une séquence de taille négative, pour vérifier qu'une erreur se produit bien\033[0m" . PHP_EOL;foreach($sequence_negative as $key => $value) {
+    echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
+}
+echo "\033[1;36m==============================================================\033[0m" . PHP_EOL;
