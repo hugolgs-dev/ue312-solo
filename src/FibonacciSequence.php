@@ -20,10 +20,13 @@ class FibonacciSequence implements Iterator {
         $this->max = $n; // Limite pour des soucis d'optimisation & pour utiliser la méthode valid()
     }
     public static function first(int $n): self {
-        $first = new self($n);
+        return new self($n);
     }
 
     public static function range(int $start, int $length = -1): self {
+        $self = new self($length);
+        $self->position = $start;
+        return $self;
 
     }
 
@@ -146,6 +149,7 @@ echo "\033[1;36m==============================================================\0
 FibonacciSequence::resetCache();
 
 // Séquence de taille négative => on vérifie qu'une erreur se produit
+$sequence_negative = new FibonacciSequence(-5);
 echo "\033[1;97mExemple d'une séquence de taille négative, pour vérifier qu'une erreur se produit bien\033[0m" . PHP_EOL;foreach($sequence_negative as $key => $value) {
     echo "Pour n = \033[1;31m$key\033[0m ➔ F_\033[1;31m$key\033[0m = \033[1;32m$value\033[0m" . PHP_EOL;
 }
